@@ -1,28 +1,41 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
+import TableComponent from './Components/Table';
 
-class App extends Component {
+import { connect } from 'react-redux';
+
+import { fetchArticleDetails } from './libs/redux/redux';
+
+class AppContainer extends Component {
+
+
+  componentWillMount() {
+    this.props.fetchArticleDetails();
+  }
+
+
   render() {
+    let info = JSON.parse(localStorage.getItem('data'));
+
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+        {info && <TableComponent data={info} /> }
       </div>
     );
   }
 }
+
+const mapStateToProps = ({ data = [] }) => ({
+  data,
+});
+
+const mapDispatchToProps = {
+  fetchArticleDetails,
+};
+
+const App = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AppContainer);
 
 export default App;
